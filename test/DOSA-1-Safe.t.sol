@@ -30,7 +30,7 @@ contract SafeETHWithdrawal is Ownable {
             uint amount = balances[users[i]];
             if (amount > 0) {
                 balances[users[i]] = 0;
-                withdrawableBalances[users[i]] += amount - fee
+                withdrawableBalances[users[i]] += amount
             }
         }
     }
