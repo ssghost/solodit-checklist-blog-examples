@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract safeContract is Ownable {
+contract SafeContract is Ownable {
     constructor() Ownable(msg.sender) {}
     struct WithdrawalRequest {
         address payable recipient;
@@ -31,17 +31,17 @@ contract safeContract is Ownable {
         for (uint256 i = 0; i < withdrawals.length - _count; i++) {
             withdrawals[i] = withdrawals[i + _count];
         }
-        withdrawals.length -= _count; 
+        for (uint256 i = 0; i < _count; i++) {withdrawals.pop;} 
     }
 }
 
 contract safeContractTest is Test {
-    safeContract public safeContract;
+    SafeContract public safeContract;
     address payable attacker = payable(address(1337));
     address payable user = payable(address(42));
 
     function setUp() public {
-        safeContract = new safeContract();
+        safeContract = new SafeContract();
         vm.deal(address(safeContract), 10 ether);
     }
 

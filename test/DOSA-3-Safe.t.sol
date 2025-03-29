@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 
 contract GroupStaking {
-    IERC20 public token;
+    BlacklistableToken public token;
 
     struct StakingGroup {
         uint256 id;
@@ -20,7 +20,7 @@ contract GroupStaking {
     mapping(uint256 => StakingGroup) public stakingGroups;
     uint256 public nextGroupId = 1;
 
-    constructor(IERC20 _token) {
+    constructor(BlacklistableToken _token) {
         token = _token;
     }
 
@@ -71,7 +71,7 @@ contract GroupStaking {
         group.totalAmount -= _amount;
         
         for (uint256 i = 0; i < group.members.length; i++) {
-            require(!token.blacklisted[group.members[i]])
+            require(!token.blacklisted(group.members[i]));
             uint256 memberShare = (_amount * group.weights[i]) / 100;
             if (memberShare > 0) {
                 token.transfer(group.members[i], memberShare);
@@ -138,7 +138,7 @@ contract GroupStakingTest is Test {
     function setUp() public {
         token = new BlacklistableToken("Test Token", "TT");
 
-        stakingContract = new GroupStaking(IERC20(address(token)));
+        stakingContract = new GroupStaking(BlacklistableToken(address(token)));
 
         token.mint(admin, 100 ether);
         token.approve(address(stakingContract), 100 ether);
