@@ -31,7 +31,7 @@ contract SafeContract is Ownable {
         for (uint256 i = 0; i < withdrawals.length - _count; i++) {
             withdrawals[i] = withdrawals[i + _count];
         }
-        for (uint256 i = 0; i < _count; i++) {withdrawals.pop;} 
+        for (uint256 i = 0; i < _count; i++) {withdrawals.pop();} 
     }
 }
 
