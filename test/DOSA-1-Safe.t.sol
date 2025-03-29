@@ -28,8 +28,8 @@ contract safeETHWithdrawal is Ownable {
 
     function startBatchWithdrawal() public {
         address[] memory users = getUsers();
-        for (uint i = 0; i<users.length; i++) {
-            uint amount = balances[users[i]];
+        for (uint256 i = 0; i<users.length; i++) {
+            uint256 amount = balances[users[i]];
             if (amount > 0) {
                 balances[users[i]] = 0;
                 withdrawableBalances[users[i]] += amount;
@@ -38,7 +38,7 @@ contract safeETHWithdrawal is Ownable {
     }
 
     function withdraw() public {
-        uint amount = withdrawableBalances[msg.sender];
+        uint256 amount = withdrawableBalances[msg.sender];
         require(amount > 0, "Insufficient balance");
         withdrawableBalances[msg.sender] = 0;
 
