@@ -15,7 +15,7 @@ contract RevertingReceiver {
     }
 }
 
-contract SafeETHWithdrawal is Ownable {
+contract safeETHWithdrawal is Ownable {
     mapping(address => uint256) public balances;
     mapping(address => uint256) public withdrawableBalances;
     constructor() Ownable(msg.sender) {}
@@ -24,13 +24,15 @@ contract SafeETHWithdrawal is Ownable {
         balances[msg.sender] += msg.value;
     }
 
+    function getUsers() private returns (address[] memory) { }
+
     function startBatchWithdrawal() public {
         address[] memory users = getUsers();
-        for (uint i = 0; i<user.length; i++) {
+        for (uint i = 0; i<users.length; i++) {
             uint amount = balances[users[i]];
             if (amount > 0) {
                 balances[users[i]] = 0;
-                withdrawableBalances[users[i]] += amount
+                withdrawableBalances[users[i]] += amount;
             }
         }
     }
@@ -77,7 +79,8 @@ contract safeETHWithdrawalTest is Test {
         assertEq(safeContract.balances(user), 10 ether);
 
         vm.expectRevert("Fee transfer failed");
-        safeContract.withdraw(5 ether);
+        safeContract.startBatchWithdrawal();
+        safeContract.withdraw();
 
         assertEq(safeContract.balances(user), 10 ether);
         vm.stopPrank();
